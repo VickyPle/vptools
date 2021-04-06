@@ -1,16 +1,22 @@
 import nuke
 
 def setup_menu():
-    m = nuke.menu('Viewer')
-    VPMenu = m.addMenu('VPTools')
-    VPToolbar = nuke.toolbar('VP Menu')
-    VPMenu = VPToolbar.addMenu('VP Tools', icon = './vptools/VP_Logo.png')
-    VPToolbar.addCommand('VP Tools/tool A', create_awesome_graph)
+    nuke.menu('Nuke').addCommand('VP Tools/Basic Match Grade', create_basic_match_grade_setup)
 
-def create_awesome_graph():
-    selectedNode = nuke.selectedNode()
-    selectedNode['value'].setValue(100)
-    nuke.nodes.Multiply(inputs=[selectedNode])
+
+def create_basic_match_grade_setup():
+    nuke.nodes.BackdropNode(label='Basic Match Grade', note_font_size=20)
+    Grade1 = nuke.nodes.Grade(black_clamp=False)
+    Grade2 = nuke.nodes.Grade(inputs=[Grade1], black_clamp=False)
+    Grade3 = nuke.nodes.Grade(inputs=[Grade2])
+    
+    
+
+
+    
+    # selectedNode = nuke.selectedNode()
+    # selectedNode['value'].setValue(100)
+    # nuke.nodes.Multiply(inputs=[selectedNode])
     # for i in range(100):
     #     nuke.nodes.Multiply(value=i)
     
