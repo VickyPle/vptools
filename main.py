@@ -1,23 +1,37 @@
 import nuke
+import nukescripts
 
 def setup_menu():
     nuke.menu('Nuke').addCommand('VP Tools/Basic Match Grade', create_basic_match_grade_setup)
     nuke.menu('Nuke').addCommand('VP Tools/Basic Script', create_basic_script)
-    nuke.menu('Nuke').addCommand('VP Tools/Tidy Nodes', tidyNodes)
+    nuke.menu('Nuke').addCommand('VP Tools/Tidy Nodes', tidyNodesFive, 'alt+t')
 
 
 def create_basic_match_grade_setup():
-    nuke.nodes.BackdropNode(label='Basic Match Grade', note_font_size=20)
     Grade1 = nuke.nodes.Grade(black_clamp=False)
     Grade2 = nuke.nodes.Grade(inputs=[Grade1], black_clamp=False)
     Grade3 = nuke.nodes.Grade(inputs=[Grade2])
+    
+    for i in nuke.selectedNodes():
+        i['selected'].setValue(False)
+
+    Grade1['selected'].setValue(True)
+    Grade2['selected'].setValue(True)
+    Grade3['selected'].setValue(True)
+
+    backdrop = nukescripts.autoBackdrop()
+    backdrop['label'].setValue('Basic Match Grade')
+    backdrop['note_font_size'].setValue(20)
 
 def create_basic_script():
     ReadNode = nuke.nodes.Constant(label='Read Node Placeholder', color=1)
     Dot = nuke.nodes.Dot(inputs=[ReadNode])
     nuke.nodes.Write(inputs=[Dot])
 
-def tidyNodes():
+def tidyNodesFive():
+    tidyNodes(5)
+
+def tidyNodes(scale):
     nodes = nuke.selectedNodes()    
     amount = len(nodes)    
     if amount == 0:    
@@ -30,8 +44,8 @@ def tidyNodes():
     centreY = allY / amount
 
     for n in nodes:
-        n.setXpos(centreX + ( n.xpos() - centreX) * 1)
-        n.setYpos(centreY + ( n.ypos() - centreY) * 1)
+        n.setXpos(int(centreX + ( n.xpos() - centreX) * scale))
+        n.setYpos(int(centreY + ( n.ypos() - centreY) * scale))
 
     
 
